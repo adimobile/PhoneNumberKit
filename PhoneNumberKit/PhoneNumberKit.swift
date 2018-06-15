@@ -146,6 +146,14 @@ public final class PhoneNumberKit: NSObject {
         return parseManager.getRegionCode(of: phoneNumber.nationalNumber, countryCode: phoneNumber.countryCode, leadingZero: phoneNumber.leadingZero)
     }
     
+    /// Returns an example number for a given country.
+    ///
+    /// - Parameter country: ISO 639 compliant region code.
+    /// - Returns: The example number for the given country if it exists.
+    public func getExamplePhoneNumber(for country: String) -> String? {
+        return metadataManager.filterTerritories(byCountry: country)?.generalDesc?.exampleNumber
+    }
+    
     // MARK: Class functions
     
     /// Get a user's default region code
