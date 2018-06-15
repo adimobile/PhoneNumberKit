@@ -146,19 +146,51 @@ public final class PhoneNumberKit: NSObject {
         return parseManager.getRegionCode(of: phoneNumber.nationalNumber, countryCode: phoneNumber.countryCode, leadingZero: phoneNumber.leadingZero)
     }
     
-    /// Returns an example fixed line number for a given country.
-    ///
-    /// - Parameter country: ISO 639 compliant region code.
-    /// - Returns: The example number for the given country if it exists.
-    public func getExampleFixedLinePhoneNumber(for country: String) -> String? {
-        return metadataManager.filterTerritories(byCountry: country)?.fixedLine?.exampleNumber
+    private func getPhoneNumberDesc(for type: PhoneNumberType, territory: MetadataTerritory) -> MetadataPhoneNumberDesc? {
+        switch type {
+        case .fixedLine:
+            return territory.fixedLine
+        case .mobile:
+            return territory.mobile
+        case .fixedOrMobile:
+            return territory.fixedLine ?? territory.mobile
+        case .pager:
+            return territory.pager
+        case .personalNumber:
+            return territory.personalNumber
+        case .premiumRate:
+            return territory.premiumRate
+        case .sharedCost:
+            return territory.sharedCost
+        case .tollFree:
+            return territory.tollFree
+        case .voicemail:
+            return territory.voicemail
+        case .voip:
+            return territory.voip
+        case .uan:
+            return territory.uan
+        case .unknown, .notParsed:
+            return nil
+        }
     }
-    /// Returns an example mobile number for a given country.
+    
+    /// Returns an example phone number for a given country and type.
     ///
-    /// - Parameter country: ISO 639 compliant region code.
-    /// - Returns: The example number for the given country if it exists.
-    public func getExampleMobilePhoneNumber(for country: String) -> String? {
-        return metadataManager.filterTerritories(byCountry: country)?.mobile?.exampleNumber
+    /// - Parameters:
+    ///   - type: The type of phone number to return.
+    ///   - country: ISO 639 compliant region code.
+    /// - Returns: The example number for the given country and type if it exists.
+    public func getExamplePhoneNumber(for type: PhoneNumberType, country: String) -> PhoneNumber? {
+        guard let territory = metadataManager.filterTerritories(byCountry: country) else {
+            return nil
+        }
+        
+        guard let exampleString = getPhoneNumberDesc(for: type, territory: territory)?.exampleNumber else {
+            return nil
+        }
+        
+        return try? parse(exampleString, withRegion: country, ignoreType: true)
     }
     
     // MARK: Class functions
