@@ -1169,7 +1169,7 @@
            carrier prefix when we see it. -->
       <generalDesc>
         <nationalNumberPattern>
-          11\d{8}|
+          0?11\d{8}|
           [2368]\d{9}|
           9\d{10}
         </nationalNumberPattern>
@@ -1185,7 +1185,7 @@
         <exampleNumber>1123456789</exampleNumber>
         <!-- Also covering fixed satellite service numbers (670). -->
         <nationalNumberPattern>
-          11\d{8}|
+          0?11\d{8}|
           (?:
             2(?:
               2(?:
